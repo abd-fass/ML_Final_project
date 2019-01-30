@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 df_file = pd.read_excel('D:/IOI M2 2018-2019/01-Machine Learning/TPs/TP-05-/prog/WangGlobalDescr/WangSignatures.xls', header=None)
 df = pd.ExcelFile('D:/IOI M2 2018-2019/01-Machine Learning/TPs/TP-05-/prog/WangGlobalDescr/WangSignatures.xls', header=None)
 
-#Get the descriptors sheet from the xls file named df
+#Get the descriptors sheet from the xls file 
 descriptor_df = {}
 for sheet_name in df.sheet_names:
     descriptor_df[sheet_name] = df.parse(sheet_name, header=None)
