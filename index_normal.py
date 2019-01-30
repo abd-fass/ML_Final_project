@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jan 30 15:46:36 2019
+Created on Wed Jan 30 23:18:38 2019
 
 @author: FMA
 """
@@ -26,8 +26,7 @@ for sheet_name in df.sheet_names:
 length_img = len(df_file)
 
 #Get the unknown image for the indexation randomly
-#Nb_img_rand = np.random.randint(length_img)
-Nb_img_rand = 730
+Nb_img_rand = np.random.randint(length_img)
 # get the index of the image unknown
 index_img = np.where(df_file[0][:] == str(Nb_img_rand) + '.jpg')
 index_img = int(index_img[0])
@@ -44,7 +43,14 @@ descriptor_Nb_img = np.zeros((1,length_dscpt))
 size_concat = 0 
 for dscpt in descriptor_df:
     descriptor = descriptor_df.get(dscpt)
-    descriptor_Nb_img[0,size_concat:size_concat+np.shape(descriptor)[1]-1] = descriptor.loc[index_img][1:]
+    
+    #Normalize the value of descriptor
+    descriptor_normalize = np.zeros((1,(np.shape(descriptor)[1]-1)))
+    for dscpt_i in range(np.shape(descriptor)[1]-1):
+        descriptor_normalize[0,dscpt_i] = ( (descriptor.loc[index_img][dscpt_i+1] - np.amin(descriptor.loc[index_img][1:])) / (np.amax(descriptor.loc[index_img][1:]) - np.amin(descriptor.loc[index_img][1:])) )
+    
+    #Concatenate the descriptor_normalize
+    descriptor_Nb_img[0,size_concat:size_concat+np.shape(descriptor)[1]-1] = descriptor_normalize
     size_concat = size_concat + np.shape(descriptor)[1]-1
 
 
@@ -69,7 +75,13 @@ for i in range(length_img):
         size_concat1 = 0 
         for dscpt1 in descriptor_df:
             descriptor1 = descriptor_df.get(dscpt1)
-            descriptor_img[0,size_concat1:size_concat1 + np.shape(descriptor1)[1]-1] = descriptor1.loc[i][1:]
+            
+            #Normalize the value of descriptor
+            descriptor1_normalize = np.zeros((1,(np.shape(descriptor1)[1]-1)))
+            for dscpt1_i in range(np.shape(descriptor1)[1]-1):
+                descriptor1_normalize[0,dscpt1_i] = ( (descriptor1.loc[i][dscpt1_i+1] - np.amin(descriptor1.loc[i][1:])) / (np.amax(descriptor1.loc[i][1:]) - np.amin(descriptor1.loc[i][1:])) )
+            
+            descriptor_img[0,size_concat1:size_concat1 + np.shape(descriptor1)[1]-1] = descriptor1_normalize
             size_concat1 = size_concat1 + np.shape(descriptor1)[1] - 1
         
         #Calculate the distance between image i and image_NB (unknown)
@@ -122,4 +134,4 @@ for plot_img in range(N_index):
     img = cv2.imread('D:/IOI M2 2018-2019/01-Machine Learning/TPs/TP-05-/prog/Wang/' + str(index[minimum_indexes[0,plot_img]]))
     plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 
-plt.show()   
+plt.show()
