@@ -52,7 +52,7 @@ for dscpt in descriptor_df:
 #vector that contain the distance between all the images and the image (unknown) choosed for the indexation
 dist = np.zeros((1,length_img - 1))
 
-#vector that contain the names of all the image compute for the distance calculation
+#vector that contain the names of all the images compute for the distance calculation
 index = []
 
 #The loop for the indexation calculation
