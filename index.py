@@ -27,7 +27,7 @@ length_img = len(df_file)
 
 #Get the unknown image for the indexation randomly
 #Nb_img_rand = np.random.randint(length_img)
-Nb_img_rand = 730
+Nb_img_rand = 570
 # get the index of the image unknown
 index_img = np.where(df_file[0][:] == str(Nb_img_rand) + '.jpg')
 index_img = int(index_img[0])
@@ -37,7 +37,7 @@ index_img = int(index_img[0])
 length_dscpt = 0
 for dscpt in descriptor_df:
     descriptor = descriptor_df.get(dscpt)
-    length_dscpt = length_dscpt + np.shape(descriptor)[1]
+    length_dscpt = length_dscpt + np.shape(descriptor)[1]-1
     
 #Concatenate all the descriptors of image Nb (unknown)
 descriptor_Nb_img = np.zeros((1,length_dscpt))
