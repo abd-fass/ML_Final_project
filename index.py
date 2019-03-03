@@ -85,6 +85,7 @@ for i in range(length_img):
         index.append(name_img)
         
     print(round(((i/(length_img-1))*100), 2), '% Done (indexation)')
+
             
 
     

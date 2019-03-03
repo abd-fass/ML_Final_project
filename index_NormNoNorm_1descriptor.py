@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan 31 14:38:26 2019
+Created on Sun Mar  3 06:37:18 2019
 
 @author: FMA
 """
@@ -28,6 +28,13 @@ for sheet_name in df.sheet_names:
 
 """ Indexation """
 
+#Choose on of the 5 descriptors for the RNN Classification
+Name_descriptors = ["WangSignaturesCEDD", "WangSignaturesFCTH", "WangSignaturesFuzzyColorHistogr", "WangSignaturesJCD", "WangSignaturesPHOG"]
+Number_descriptor = 4 #The value to choose is beetwen [0:4]
+
+#Get the descriptor length
+length_dscpt = np.shape(descriptor_df.get(Name_descriptors[Number_descriptor]))[1]-1
+
 #Get the Number of images
 length_img = len(df_file)
 
@@ -39,22 +46,13 @@ index_img = np.where(df_file[0][:] == str(Nb_img_rand) + '.jpg')
 index_img = int(index_img[0])
 
 
-#Get all descriptor length
-length_dscpt = 0
-for dscpt in descriptor_df:
-    descriptor = descriptor_df.get(dscpt)
-    length_dscpt = length_dscpt + np.shape(descriptor)[1]-1
-    
-#Concatenate all the descriptors (Norm and NoNorm) of image Nb (unknown)
+#get the descriptor for image unknown
 descriptor_Nb_img = np.zeros((1,length_dscpt))
 descriptor_norm_Nb_img = np.zeros((1,length_dscpt))
-size_concat = 0 
-for dscpt in descriptor_df:
-    descriptor = descriptor_df.get(dscpt)
-    descriptor_norm = descriptor_df_norm.get(dscpt)
-    descriptor_Nb_img[0,size_concat:size_concat+np.shape(descriptor)[1]-1] = descriptor.loc[index_img][1:]
-    descriptor_norm_Nb_img[0,size_concat:size_concat+np.shape(descriptor_norm)[1]-1] = descriptor_norm.loc[index_img][1:]
-    size_concat = size_concat + np.shape(descriptor)[1]-1
+
+descriptor_Nb_img[0,:] = descriptor_df.get(Name_descriptors[Number_descriptor]).loc[index_img][1:]
+descriptor_norm_Nb_img[0,:] = descriptor_df_norm.get(Name_descriptors[Number_descriptor]).loc[index_img][1:]
+
 
 
 
@@ -74,17 +72,14 @@ for i in range(length_img):
     
     #Avoid compute the calculation with image Nb (unknown)
     if (name_img != str(Nb_img_rand) + '.jpg'):
-        #get all the descriptor for image i and concatenate them
+
+        #get the descriptor for image i 
         descriptor_img = np.zeros((1,length_dscpt))
         descriptor_norm_img = np.zeros((1,length_dscpt))
-        size_concat1 = 0 
-        for dscpt1 in descriptor_df:
-            descriptor1 = descriptor_df.get(dscpt1)
-            descriptor1_norm = descriptor_df_norm.get(dscpt1)
-            
-            descriptor_img[0,size_concat1:size_concat1 + np.shape(descriptor1)[1]-1] = descriptor1.loc[i][1:]
-            descriptor_norm_img[0,size_concat1:size_concat1 + np.shape(descriptor1_norm)[1]-1] = descriptor1_norm.loc[i][1:]
-            size_concat1 = size_concat1 + np.shape(descriptor1)[1] - 1
+        
+        descriptor_img[0,:] = descriptor_df.get(Name_descriptors[Number_descriptor]).loc[i][1:]
+        descriptor_norm_img[0,:] = descriptor_df_norm.get(Name_descriptors[Number_descriptor]).loc[i][1:]
+
         
         #Calculate the distance between image i and image_NB (unknown) (Norm and NoNorm)
         sum_val = 0
